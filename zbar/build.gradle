@@ -13,3 +13,10 @@ dependencies {
     api libraries.barcodescanner_core
     api fileTree(dir: 'libs', include: '*.jar')
 }
+
+task init {
+    init.ext.identifier = 'zbar'
+    init.ext.aarPath = 'build/outputs/aar/zbar-release.aar'
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

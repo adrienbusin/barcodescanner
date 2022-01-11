@@ -1,0 +1,46 @@
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        repositories {
+            def gar_token_file = new File("${project.rootDir}/.secure/assets/instore-gar-mpe-key.json")
+
+            maven {
+                name = "DktMobileGAR"
+                url = uri("repo_URL")
+                credentials {
+                    username = "_json_key_base64"
+                    password = gar_token_file.bytes.encodeBase64().toString()
+                }
+                authentication {
+                    basic(BasicAuthentication)
+                }
+            }
+        }
+        publications {
+            gar(MavenPublication) {
+                //The publication doesn't know about our dependencies, so we have to manually add them to the pom
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    //Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.allDependencies.each {
+                        if(it.name != "unspecified"){
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
+                        }
+                    }
+                }
+
+                artifacts {
+                    groupId = 'me.dm7.barcodescanner'
+                    artifactId = init.ext.identifier
+                    version = '1.9.13'
+                    artifact init.ext.aarPath
+                }
+            }
+        }
+    }
+}

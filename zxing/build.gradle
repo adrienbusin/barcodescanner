@@ -13,3 +13,10 @@ dependencies {
     api libraries.barcodescanner_core
     api libraries.zxing_core
 }
+
+task init {
+    init.ext.identifier = 'zxing'
+    init.ext.aarPath = 'build/outputs/aar/zxing-release.aar'
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')

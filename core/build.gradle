@@ -11,3 +11,10 @@ ext {
 dependencies {
     implementation libraries.support_v4
 }
+
+task init {
+    init.ext.identifier = 'core'
+    init.ext.aarPath = 'build/outputs/aar/core-release.aar'
+}
+
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
